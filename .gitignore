@@ -1,0 +1,11 @@
+#OSX-specific exclusions
+.[dD][sS]_[sS]tore
+
+#Sublime nature exclusions
+*.sublime-workspace
+*.sublime-settings
+*.sublime-project
+
+#MavensMate nature exclusions
+config/*
+mm.log
