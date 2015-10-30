@@ -272,7 +272,9 @@ global class LoopbackDataSourceConnection extends DataSource.Connection{
 			return mapColumnName(columnName) + ' LIKE \'%' + String.valueOf(expectedValue) + '\'';
 		}else if(filter.type == DataSource.FilterType.CONTAINS){
 			return mapColumnName(columnName) + ' LIKE \'%' + String.valueOf(expectedValue) + '%\'';
-		}else{
+		}else if (filter.type == DataSource.FilterType.LIKE_) {
+      return mapColumnName(columnName) + ' LIKE \'' + String.valueOf(expectedValue) + '\'';
+    }else{
 			//throw exception
 		}
 
