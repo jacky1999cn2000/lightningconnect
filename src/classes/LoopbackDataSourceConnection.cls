@@ -54,15 +54,15 @@ global class LoopbackDataSourceConnection extends DataSource.Connection{
 
 		//目前的API对外部数据的aggregation仅支持 COUNT()，这个IF主要是来应付如下SOQL: SELECT COUNT() FROM EXTERNALOBJECT
 		if(context.tableSelection.columnsSelected.size() == 1 && context.tableSelection.columnsSelected.get(0).aggregation == DataSource.QueryAggregation.COUNT){
-				Integer count = execCount(getCountQuery(context.tableSelection.filter));
-				List<Map<String, Object>> countResponse = new List<Map<String, Object>>();
-				Map<String, Object> countRow = new Map<String, Object>();
-				countRow.put(context.tableSelection.columnsSelected.get(0).columnName, count);
-				countResponse.add(countRow);
-				return DataSource.TableResult.get(context, countResponse);
+			Integer count = execCount(getCountQuery(context.tableSelection.filter));
+			List<Map<String, Object>> countResponse = new List<Map<String, Object>>();
+			Map<String, Object> countRow = new Map<String, Object>();
+			countRow.put(context.tableSelection.columnsSelected.get(0).columnName, count);
+			countResponse.add(countRow);
+			return DataSource.TableResult.get(context, countResponse);
 		}else{
-				List<Map<String, Object>> rows = execQuery(getSoqlQuery(context.tableSelection.filter));
-				return DataSource.TableResult.get(context, rows);
+			List<Map<String, Object>> rows = execQuery(getSoqlQuery(context.tableSelection.filter));
+			return DataSource.TableResult.get(context, rows);
 		}
 	}
 
@@ -130,13 +130,13 @@ global class LoopbackDataSourceConnection extends DataSource.Connection{
 		List<Map<String, Object>> rows = new List<Map<String, Object>>();
 
 		for(Account obj : objs){
-				Map<String, Object> row = new Map<String, Object>();
-				row.put('Name', obj.Name);
-				row.put('Phone', obj.Phone);
-				row.put('NumberOfEmployees', obj.NumberOfEmployees);
-				row.put('ExternalId', obj.Id);
-				row.put('DisplayUrl', URL.getSalesforceBaseUrl().toExternalForm() + obj.Id);
-				rows.add(row);
+			Map<String, Object> row = new Map<String, Object>();
+			row.put('Name', obj.Name);
+			row.put('Phone', obj.Phone);
+			row.put('NumberOfEmployees', obj.NumberOfEmployees);
+			row.put('ExternalId', obj.Id);
+			row.put('DisplayUrl', URL.getSalesforceBaseUrl().toExternalForm() + obj.Id);
+			rows.add(row);
 		}
 
 		return rows;
@@ -157,7 +157,7 @@ global class LoopbackDataSourceConnection extends DataSource.Connection{
 		String baseQuery = 'SELECT COUNT() FROM Account';
 		String clause = getSoqlFilter('', filter);
 		if(clause.length() > 0){
-				return baseQuery + ' WHERE ' + filter;
+			return baseQuery + ' WHERE ' + filter;
 		}
 		return baseQuery;
 	}
@@ -170,7 +170,7 @@ global class LoopbackDataSourceConnection extends DataSource.Connection{
 		//String filter = getSoqlFilter('', context.tableSelection.filter);
 		String clause = getSoqlFilter('', filter);
 		if(clause.length() > 0){
-				return baseQuery + ' WHERE ' + clause;
+			return baseQuery + ' WHERE ' + clause;
 		}
 		return baseQuery;
 	}
@@ -183,7 +183,7 @@ global class LoopbackDataSourceConnection extends DataSource.Connection{
 
 		String clause = getSoqlFilter('', filter);
 		if(clause.length() > 0){
-				return baseQuery + ' WHERE ' + clause;
+			return baseQuery + ' WHERE ' + clause;
 		}
 		System.debug('***baseQuery: '+baseQuery);
 		return baseQuery;
@@ -208,14 +208,14 @@ global class LoopbackDataSourceConnection extends DataSource.Connection{
 		DataSource.FilterType type = filter.type;
 
 		if(type == DataSource.FilterType.NOT_){
-				DataSource.Filter subfilter = filter.subfilters.get(0);
-				append = getSoqlFilter('NOT', subfilter);
+			DataSource.Filter subfilter = filter.subfilters.get(0);
+			append = getSoqlFilter('NOT', subfilter);
 		}else if(type == DataSource.FilterType.AND_){
-				append = getSoqlFilterCompound('AND', filter.subfilters);
+			append = getSoqlFilterCompound('AND', filter.subfilters);
 		}else if(type == DataSource.FilterType.OR_){
-				append = getSoqlFilterCompound('OR', filter.subfilters);
+			append = getSoqlFilterCompound('OR', filter.subfilters);
 		}else{
-				append = getSoqlFilterExpression(filter);
+			append = getSoqlFilterExpression(filter);
 		}
 
 		return query + ' ' + append;
@@ -235,12 +235,12 @@ global class LoopbackDataSourceConnection extends DataSource.Connection{
 		String expression = ' (';
 		Boolean first = true;
 		for(DataSource.Filter subfilter : subfilters){
-				if(first){
-						first = false;
-				}else{
-						expression += ' ' + operator + ' ';
-				}
-				expression += getSoqlFilter('', subfilter);
+			if(first){
+				first = false;
+			}else{
+				expression += ' ' + operator + ' ';
+			}
+			expression += getSoqlFilter('', subfilter);
 		}
 		expression += ') ';
 		return expression;
@@ -255,25 +255,25 @@ global class LoopbackDataSourceConnection extends DataSource.Connection{
 		Object expectedValue = filter.columnValue;
 
 		if(filter.type == DataSource.FilterType.EQUALS){
-				operator = '=';
+			operator = '=';
 		}else if(filter.type == DataSource.FilterType.NOT_EQUALS){
-				operator = '<>';
+			operator = '<>';
 		}else if(filter.type == DataSource.FilterType.LESS_THAN){
-				operator = '<';
+			operator = '<';
 		}else if(filter.type == DataSource.FilterType.GREATER_THAN){
-				operator = '>';
+			operator = '>';
 		}else if(filter.type == DataSource.FilterType.LESS_THAN_OR_EQUAL_TO){
-				operator = '<=';
+			operator = '<=';
 		}else if(filter.type == DataSource.FilterType.GREATER_THAN_OR_EQUAL_TO){
-				operator = '>=';
+			operator = '>=';
 		}else if(filter.type == DataSource.FilterType.STARTS_WITH){
-				return mapColumnName(columnName) + ' LIKE \'' + String.valueOf(expectedValue) + '%\'';
+			return mapColumnName(columnName) + ' LIKE \'' + String.valueOf(expectedValue) + '%\'';
 		}else if(filter.type == DataSource.FilterType.ENDS_WITH){
-				return mapColumnName(columnName) + ' LIKE \'%' + String.valueOf(expectedValue) + '\'';
+			return mapColumnName(columnName) + ' LIKE \'%' + String.valueOf(expectedValue) + '\'';
 		}else if(filter.type == DataSource.FilterType.CONTAINS){
-				return mapColumnName(columnName) + ' LIKE \'%' + String.valueOf(expectedValue) + '%\'';
+			return mapColumnName(columnName) + ' LIKE \'%' + String.valueOf(expectedValue) + '%\'';
 		}else{
-				//throw exception
+			//throw exception
 		}
 
 		return mapColumnName(columnName) + ' ' + operator + ' ' + wrapValue(expectedValue);
@@ -284,11 +284,11 @@ global class LoopbackDataSourceConnection extends DataSource.Connection{
 	*/
 	private String mapColumnName(String apexName){
 		if(apexName.equalsIgnoreCase('ExternalId')){
-				return 'Id';
+			return 'Id';
 		}
 
 		if(apexName.equalsIgnoreCase('DisplayUrl')){
-				return 'Id';
+			return 'Id';
 		}
 
 		return apexName;
@@ -299,7 +299,7 @@ global class LoopbackDataSourceConnection extends DataSource.Connection{
 	*/
 	private String wrapValue(Object foundValue){
 		if(foundValue instanceof String){
-				return '\'' + String.valueOf(foundValue) + '\'';
+			return '\'' + String.valueOf(foundValue) + '\'';
 		}
 
 		return String.valueOf(foundValue);
